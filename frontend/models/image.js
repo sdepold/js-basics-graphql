@@ -24,12 +24,36 @@ module.exports = {
   },
 
   findAll() {
-    return fetch("http://localhost:5555/rest/images", {
+    const query = `
+        {
+            images {
+                id
+                filename
+                user {
+                    id
+                    username
+                }
+                comments {
+                    text
+                    user {
+                        id
+                        username
+                    }
+                }
+            }
+        }
+    `;
+
+    return fetch("http://localhost:5555/graphql?", {
       headers: {
-        "Content-Type": "application/json",
+        "content-type": "application/json",
+        accept: "application/json",
       },
+      body: JSON.stringify({ query, variables: null }),
+      method: "POST",
     })
       .then((res) => res.json())
+      .then((res) => res.data.images)
       .then(async (images) => Promise.all(images.map(sanitizeImage)));
   },
 
@@ -41,13 +65,8 @@ module.exports = {
 };
 
 async function sanitizeImage(image) {
-  const user = await User.findOne({ username: image.userId });
-  const comments = await comment.findAll(image.id);
-
   return {
     ...image,
     url: `http://localhost:5555/uploads/${image.filename}`,
-    user,
-    comments,
   };
 }
