@@ -28,10 +28,7 @@ controller.post("/new", async (req, res) => {
 });
 
 controller.get("/:id", async (req, res) => {
-  const image = await Image.findOne({
-    where: { id: req.params.id },
-    include: { all: true, nested: true },
-  });
+  const image = await Image.findOne(Number(req.params.id));
 
   res.send(imagesShowView({ user: req.session.user, image }));
 });

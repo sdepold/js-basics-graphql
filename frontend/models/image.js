@@ -34,4 +34,10 @@ module.exports = {
         }))
       );
   },
+
+  findOne(id) {
+    return this.findAll().then((images) =>
+      images.find((image) => image.id === id)
+    );
+  },
 };
