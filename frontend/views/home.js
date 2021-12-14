@@ -4,11 +4,11 @@ function getImage(image) {
   return `
     <div class="image">
       <a href="/images/${image.id}">
-        <img src="/uploads/${image.filename}" />
+        <img src="${image.url}" />
       </a>
       <div class="meta">
-        <div class="author">👤 ${image.user.username}</div>
-        <div class="comments">💬 ${image.comments.length}</div>
+        <div class="author">👤 ${0 /*image.user.username*/}</div>
+        <div class="comments">💬 ${0 /*image.comments.length*/}</div>
       </div>
     </div>
   `;

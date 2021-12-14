@@ -3,10 +3,8 @@ const controller = Router();
 
 const imagesNewView = require("../views/images-new");
 const imagesShowView = require("../views/images-show");
-const { Image, User, Comment } = require("../models");
+const { Image } = require("../models");
 const path = require("path");
-
-const UPLOAD_PATH = path.resolve(__dirname, "../public/uploads");
 
 controller.get("/new", (req, res) => {
   res.send(imagesNewView({ user: req.session.user }));
@@ -18,12 +16,10 @@ controller.post("/new", async (req, res) => {
   }
 
   try {
-    const filename = [req.files.data.md5, req.files.data.name].join("-");
-
-    await req.files.data.mv(path.resolve(UPLOAD_PATH, filename));
-
-    const user = await User.findOne({ where: { id: req.session.user.id } });
-    const image = await user.createImage({ filename });
+    const image = await Image.create({
+      data: req.files.data,
+      user: req.session.user,
+    });
 
     return res.redirect(`/?highlight=${image.id}`);
   } catch (e) {

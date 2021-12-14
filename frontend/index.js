@@ -24,7 +24,7 @@ app.use(
 app.use("/", require("./controllers/home"));
 app.use("/users", require("./controllers/users"));
 app.use("/sessions", require("./controllers/sessions"));
-// app.use("/images", require("./controllers/images"));
+app.use("/images", require("./controllers/images"));
 
 // Start the server on port 3000
 app.listen(3000, () => {

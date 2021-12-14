@@ -12,10 +12,7 @@ controller.post("/login", async (req, res) => {
   const user = await User.findOne({ username: req.body.username });
 
   if (user) {
-    req.session.user = {
-      id: user.id,
-      username: user.username,
-    };
+    req.session.user = user;
     return res.redirect("/");
   } else {
     const error = "User not found!";
