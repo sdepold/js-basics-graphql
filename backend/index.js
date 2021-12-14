@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 const expressSession = require("express-session");
 const SessionStore = require("express-session-sequelize")(expressSession.Store);
+const { graphqlHTTP } = require("express-graphql");
 
 const app = express();
 
@@ -36,6 +37,14 @@ app.use(
 app.use("/rest", require("./controllers/rest/users"));
 app.use("/rest", require("./controllers/rest/images"));
 app.use("/rest", require("./controllers/rest/comments"));
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema: require("./graphql/schema"),
+    rootValue: require("./graphql/resolvers"),
+    graphiql: true,
+  })
+);
 
 (async () => {
   // Synchronize our models with the database
