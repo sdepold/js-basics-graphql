@@ -1,4 +1,6 @@
 const fetch = require("cross-fetch");
+const comment = require("./comment");
+const User = require("./user");
 
 module.exports = {
   create({ data, user }) {
@@ -27,11 +29,20 @@ module.exports = {
       },
     })
       .then((res) => res.json())
-      .then((images) =>
-        images.map((image) => ({
-          ...image,
-          url: `http://localhost:5555/uploads/${image.filename}`,
-        }))
+      .then(async (images) =>
+        Promise.all(
+          images.map(async (image) => {
+            const user = await User.findOne({ username: image.userId });
+            const comments = await comment.findAll(image.id);
+
+            return {
+              ...image,
+              url: `http://localhost:5555/uploads/${image.filename}`,
+              user,
+              comments,
+            };
+          })
+        )
       );
   },
 

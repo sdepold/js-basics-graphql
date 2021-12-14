@@ -34,7 +34,6 @@ module.exports = {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         if (data.error) {
           throw new Error(data.error);
         }

@@ -3,8 +3,7 @@ const controller = Router();
 
 const imagesNewView = require("../views/images-new");
 const imagesShowView = require("../views/images-show");
-const { Image } = require("../models");
-const path = require("path");
+const { Image, Comment } = require("../models");
 
 controller.get("/new", (req, res) => {
   res.send(imagesNewView({ user: req.session.user }));
@@ -29,16 +28,19 @@ controller.post("/new", async (req, res) => {
 
 controller.get("/:id", async (req, res) => {
   const image = await Image.findOne(Number(req.params.id));
+  const comments = await Comment.findAll(image.id);
 
-  res.send(imagesShowView({ user: req.session.user, image }));
+  res.send(imagesShowView({ user: req.session.user, image, comments }));
 });
 
 controller.post("/:id/comments", async (req, res) => {
-  let image = await Image.findOne({ where: { id: req.params.id } });
+  await Comment.create(
+    Number(req.params.id),
+    req.session.user,
+    req.body.comment
+  );
 
-  image.createComment({ text: req.body.comment, userId: req.session.user.id });
-
-  res.redirect(302, `/images/${image.id}`);
+  res.redirect(302, `/images/${req.params.id}`);
 });
 
 module.exports = controller;

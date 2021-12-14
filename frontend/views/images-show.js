@@ -9,7 +9,7 @@ function getComment(comment) {
   `;
 }
 
-function getComments(comments=[]) {
+function getComments(comments = []) {
   return `
     <div class="comments">
       ${comments.map(getComment).join("")}
@@ -44,8 +44,8 @@ module.exports = ({ image, user } = {}) => {
       <div class="image-show">
         <img src="${image.url}" />
         <div class="meta">
-          <div>👤 ${0 /* image.user.username */}</div>
-          <div>💬 ${0 /* image.comments.length */}</div>
+          <div>👤 ${image.user.username}</div>
+          <div>💬 ${image.comments.length}</div>
         </div>
         ${getComments(image.comments)}
         ${getCreateCommentForm(user, image)}

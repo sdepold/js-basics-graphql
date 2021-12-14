@@ -35,6 +35,7 @@ app.use(
 // Routes are registered here
 app.use("/rest", require("./controllers/rest/users"));
 app.use("/rest", require("./controllers/rest/images"));
+app.use("/rest", require("./controllers/rest/comments"));
 
 (async () => {
   // Synchronize our models with the database

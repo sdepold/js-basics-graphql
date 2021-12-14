@@ -13,7 +13,6 @@ controller.post("/register", async (req, res) => {
     const user = await User.create({ username: req.body.username });
 
     req.session.user = user;
-    console.log(user)
 
     return res.send(usersRegisterConfirmView({ user }));
   } catch (e) {

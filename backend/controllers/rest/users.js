@@ -2,6 +2,7 @@ const { Router } = require("express");
 const controller = Router();
 const User = require("../../models/user");
 const { v4: uuidv4 } = require("uuid");
+const { Op } = require("sequelize");
 
 async function handleUserLookup(where, res) {
   const user = await User.findOne({ where });
@@ -17,8 +18,16 @@ controller.get("/users/me", async (req, res) => {
   handleUserLookup({ apiKey: req.headers["api-key"] }, res);
 });
 
-controller.get("/users/:username", async (req, res) => {
-  handleUserLookup({ username: req.params.username }, res);
+controller.get("/users/:usernameOrId", async (req, res) => {
+  handleUserLookup(
+    {
+      [Op.or]: [
+        { username: req.params.usernameOrId },
+        { id: req.params.usernameOrId },
+      ],
+    },
+    res
+  );
 });
 
 controller.post("/users", async (req, res) => {
