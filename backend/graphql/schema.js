@@ -26,4 +26,7 @@ module.exports = buildSchema(`
     type Query {
         images: [Image]
     }
+    type Mutation {
+        createComment(apiKey: String!, text: String!, imageId: ID!): Comment
+    }
 `);
