@@ -19,7 +19,7 @@ module.exports = {
 
         return data.comment;
       })
-      .then(enrichWithUser);
+      .then(sanitizeComment);
   },
 
   findAll(imageId) {
@@ -29,11 +29,11 @@ module.exports = {
       },
     })
       .then((res) => res.json())
-      .then((comments) => Promise.all(comments.map(enrichWithUser)));
+      .then((comments) => Promise.all(comments.map(sanitizeComment)));
   },
 };
 
-async function enrichWithUser(comment) {
+async function sanitizeComment(comment) {
   const user = await User.findOne({ username: comment.userId });
 
   return { ...comment, user };

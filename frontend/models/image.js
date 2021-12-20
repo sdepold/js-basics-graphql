@@ -19,7 +19,8 @@ module.exports = {
         }
 
         return data.image;
-      });
+      })
+      .then(sanitizeImage);
   },
 
   findAll() {
@@ -29,21 +30,7 @@ module.exports = {
       },
     })
       .then((res) => res.json())
-      .then(async (images) =>
-        Promise.all(
-          images.map(async (image) => {
-            const user = await User.findOne({ username: image.userId });
-            const comments = await comment.findAll(image.id);
-
-            return {
-              ...image,
-              url: `http://localhost:5555/uploads/${image.filename}`,
-              user,
-              comments,
-            };
-          })
-        )
-      );
+      .then(async (images) => Promise.all(images.map(sanitizeImage)));
   },
 
   findOne(id) {
@@ -52,3 +39,15 @@ module.exports = {
     );
   },
 };
+
+async function sanitizeImage(image) {
+  const user = await User.findOne({ username: image.userId });
+  const comments = await comment.findAll(image.id);
+
+  return {
+    ...image,
+    url: `http://localhost:5555/uploads/${image.filename}`,
+    user,
+    comments,
+  };
+}
