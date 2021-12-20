@@ -1,6 +1,24 @@
 const fetch = require("cross-fetch");
-const comment = require("./comment");
-const User = require("./user");
+
+const FIND_ALL_QUERY = `
+{
+    images {
+        id
+        filename
+        user {
+            id
+            username
+        }
+        comments {
+            text
+            user {
+                id
+                username
+            }
+        }
+    }
+}
+`;
 
 module.exports = {
   create({ data, user }) {
@@ -24,32 +42,12 @@ module.exports = {
   },
 
   findAll() {
-    const query = `
-        {
-            images {
-                id
-                filename
-                user {
-                    id
-                    username
-                }
-                comments {
-                    text
-                    user {
-                        id
-                        username
-                    }
-                }
-            }
-        }
-    `;
-
-    return fetch("http://localhost:5555/graphql?", {
+    return fetch("http://localhost:5555/graphql", {
       headers: {
         "content-type": "application/json",
         accept: "application/json",
       },
-      body: JSON.stringify({ query, variables: null }),
+      body: JSON.stringify({ query: FIND_ALL_QUERY }),
       method: "POST",
     })
       .then((res) => res.json())
